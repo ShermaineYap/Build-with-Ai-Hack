@@ -28,7 +28,7 @@ const WRITERS: Partial<Record<ClauseType, Writer>> = {
     return parts.join(" ") || "What does confirmation after probation depend on?";
   },
   overtime: () =>
-    "Since my salary is under RM4,000, could you confirm how overtime will be handled under the Employment Act, and how often work beyond normal hours is expected?",
+    "Since my wages are under RM4,000, could you confirm how overtime will be handled under the Employment Act, and how often work beyond normal hours is expected?",
   allowance: (c) => {
     const amt = findAmounts(c.quote)[0];
     return `Could part or all of the ${amt ? `${rm(amt.value)} ` : ""}allowance be included in my basic salary, so that it counts towards EPF, increments and bonus?`;

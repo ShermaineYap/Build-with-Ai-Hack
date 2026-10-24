@@ -8,7 +8,7 @@ import type { Salary, TakeHome, ReceiptLine } from "./types";
  *  - EPF employee share 11% (Third Schedule, EPF Act 1991)
  *  - SOCSO (Act 4, first category) employee 0.5%, EIS (Act 800) employee 0.2%,
  *    both on wages capped at RM6,000, charged on the RM100 wage band's midpoint
- *  - PCB estimated from YA2025 resident tax bands with standard reliefs
+ *  - PCB estimated from YA2025/YA2026 resident tax bands with standard reliefs
  */
 
 export const EPF_EMPLOYEE_RATE = 0.11;
@@ -22,7 +22,7 @@ export const SOCSO_EIS_RELIEF_CAP = 350;
 export const REBATE_AMOUNT = 400;
 export const REBATE_THRESHOLD = 35000;
 
-/** [upper bound of band, rate] for YA2025 resident individuals. */
+/** [upper bound of band, rate] for YA2025/YA2026 resident individuals. */
 export const TAX_BANDS: Array<[number, number]> = [
   [5_000, 0],
   [20_000, 0.01],
@@ -109,7 +109,7 @@ export function computeTakeHome(salary: Salary): TakeHome | null {
       label: a.label,
       malay: "Elaun",
       amount: a.amount,
-      note: a.epfLiable ? undefined : "not counted for EPF / SOCSO",
+      note: a.epfLiable ? undefined : "not counted for EPF / SOCSO / EIS",
     })),
     { key: "gross", label: "Gross pay", malay: "Gaji kasar", amount: gross },
     { key: "epf", label: "EPF (11%)", malay: "KWSP", amount: -epf, note: `on RM${fmt(liableWages)}` },

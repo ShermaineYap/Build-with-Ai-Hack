@@ -28,6 +28,8 @@ interface Ctx {
   sentences: Sentence[];
   salary: SalaryReading;
   gross: number | null;
+  /** Wages for EPF / Employment Act purposes: basic plus allowances other than travel. */
+  epfWages: number | null;
 }
 
 const MIN_WAGE = 1700;
@@ -35,7 +37,9 @@ const MIN_WAGE = 1700;
 export function detectClauses(text: string, salary: SalaryReading, sentences: Sentence[] = splitSentences(text)): Clause[] {
   const gross =
     salary.basic !== null ? salary.basic + salary.allowances.reduce((s, a) => s + a.amount, 0) : null;
-  const ctx: Ctx = { text, sentences, salary, gross };
+  const epfWages =
+    salary.basic !== null ? salary.basic + salary.allowances.filter((a) => a.epfLiable).reduce((s, a) => s + a.amount, 0) : null;
+  const ctx: Ctx = { text, sentences, salary, gross, epfWages };
   const found = [bond, probation, notice, allowance, overtime, noncompete, transfer, hours, leave, deduction, deadline]
     .map((d) => d(ctx))
     .filter((c): c is Clause => c !== null);
@@ -216,7 +220,7 @@ function allowance(ctx: Ctx): Clause | null {
   if (share < 0.15 && !travel.length) return null;
   const parts = [`${rm(total)} of your ${rm(ctx.gross)} (${Math.round(share * 100)}%) is allowance, not basic salary.`];
   if (travel.length) {
-    const employerRate = ctx.gross <= 5000 ? 0.13 : 0.12;
+    const employerRate = (ctx.epfWages ?? ctx.gross) <= 5000 ? 0.13 : 0.12;
     const lostEpf = Math.round(travel.reduce((s, a) => s + a.amount, 0) * (0.11 + employerRate));
     parts.push(`Travel allowances don't count for EPF, so about ${rm(lostEpf)} less goes into your EPF each month (your share plus your employer's).`);
   }
@@ -232,11 +236,11 @@ function allowance(ctx: Ctx): Clause | null {
 function overtime(ctx: Ctx): Clause | null {
   const s = matching(ctx, /\b(not|no)\b[^.]{0,60}\bovertime\b|\bovertime\b[^.]{0,40}\bnot (?:be )?(?:payable|paid|applicable)/i)[0];
   if (!s) return null;
-  const covered = ctx.gross !== null && ctx.gross <= 4000;
+  const covered = ctx.epfWages !== null && ctx.epfWages <= 4000;
   if (covered) {
     return clause(
       "overtime", "red", "No overtime pay", ctx, [s],
-      `Your letter says you won't get overtime pay. If your monthly wages are RM4,000 or less (yours are ${rm(ctx.gross!)}), the Employment Act generally entitles you to overtime at 1.5× your hourly rate, whatever your job title.`,
+      `Your letter says you won't get overtime pay. If your monthly wages are RM4,000 or less (yours are ${rm(ctx.epfWages!)}, not counting travel allowance), the Employment Act 1955 generally entitles you to overtime at 1.5× your hourly rate, whatever your job title.`,
       "Calling a role \"executive\" doesn't by itself remove the right to overtime. Above RM4,000 a month, no overtime is normal.",
     );
   }
@@ -258,7 +262,7 @@ function noncompete(ctx: Ctx): Clause | null {
   return clause(
     "noncompete", "amber", "Restriction after you leave", ctx, [s],
     `You're told not to work for a competitor${client ? " or client" : ""}${d ? ` for ${formatDuration(d)}` : ""} after leaving.`,
-    "In Malaysia, section 28 of the Contracts Act 1950 generally makes restraints on working elsewhere after you leave unenforceable. Confidentiality and not poaching clients or staff can still apply.",
+    "In Malaysia, section 28 of the Contracts Act 1950 generally makes restraints on working elsewhere after you leave unenforceable. Confidentiality duties still apply, and clauses on not poaching clients or staff may be enforced depending on how they're worded.",
   );
 }
 
@@ -283,7 +287,7 @@ function hours(ctx: Ctx): Clause | null {
   return clause(
     "hours", "amber", "Long working week", ctx, [s],
     `Your letter sets ${h} hours a week.`,
-    "The Employment Act limit is 45 hours a week for most employees. Anything above that should normally be paid as overtime.",
+    "The Employment Act limit is 45 hours a week. If you earn RM4,000 a month or less, work beyond your normal hours should be paid as overtime.",
   );
 }
 
@@ -312,7 +316,7 @@ function deduction(ctx: Ctx): Clause | null {
   return clause(
     "deduction", "amber", "Company can deduct from your pay", ctx, [s],
     "The company says it can take money out of your salary.",
-    "The Employment Act only allows certain deductions (like statutory contributions, or ones you agree to in writing). Ask what this would be used for.",
+    "The Employment Act (section 24) only allows certain deductions, such as statutory contributions, wages overpaid in the last three months, or items you've asked for in writing (some also need Labour Department approval). They're generally capped at 50% of your wages. Ask what this would be used for.",
   );
 }
 

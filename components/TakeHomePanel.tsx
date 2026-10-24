@@ -91,7 +91,7 @@ export function TakeHomePanel({ salary, takeHome, employer, probation }: Props) 
                 SOCSO/EIS relief gives RM{fmt(th.annual.chargeable)} taxable. Tax on that is RM{fmt(th.annual.taxBeforeRebate)}
                 {th.annual.rebate > 0 ? `, less the RM${fmt(th.annual.rebate)} rebate` : ""}, so RM{fmt(th.annual.tax)} a year.
               </li>
-              <li>Assumes you&apos;re a Malaysian resident under 60, single, with no other reliefs. Your employer&apos;s actual PCB may differ slightly.</li>
+              <li>Assumes you&apos;re a Malaysian resident under 60, single, with no other reliefs. Your employer&apos;s actual PCB may differ slightly. Rates are for 2025–2026; Budget 2027 proposes changes from 2027.</li>
             </ul>
           </details>
         </>

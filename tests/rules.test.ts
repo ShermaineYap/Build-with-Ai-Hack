@@ -108,3 +108,14 @@ describe("questions for HR", () => {
     expect(e).toContain("1. ");
   });
 });
+
+it("doesn't let a travel allowance push wages over the RM4,000 overtime line", () => {
+  const letter = `ACME SDN BHD
+Dear Ms Lee,
+Your basic salary will be RM3,800 per month.
+You will also receive a fixed travel allowance of RM500 per month.
+You shall not be entitled to any overtime payment.
+You will be on probation for three (3) months and will be entitled to twelve (12) days of annual leave.`;
+  const r = decodeWithRules(letter);
+  expect(r.clauses.find((c) => c.type === "overtime")!.severity).toBe("red");
+});

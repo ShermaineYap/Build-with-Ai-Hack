@@ -1,0 +1,18 @@
+# Devpost Learn: personal learning context stays out of commits
+/devpost/learner-profile.md
+
+# Local credentials (secret-free .env.example is allowed)
+.env
+.env.*
+!.env.example
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+.vercel/
+.DS_Store
+npm-debug.log*

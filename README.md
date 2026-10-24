@@ -42,7 +42,7 @@ With a key, the letter is read by Gemini (`gemini-3.8-flash` by default, change 
 npm test
 ```
 
-42 unit tests cover the statutory arithmetic (checked against hand calculations and PERKESO band values), the salary reader, every clause detector on the sample letter and on a fair letter, the HR questions, and the AI fallback paths with a mocked Gemini response.
+43 unit tests cover the statutory arithmetic (checked against hand calculations and PERKESO band values), the salary reader, every clause detector on the sample letter and on a fair letter, the HR questions, and the AI fallback paths with a mocked Gemini response.
 
 ## How the numbers are worked out
 

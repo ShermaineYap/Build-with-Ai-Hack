@@ -3,8 +3,9 @@ import { MAX_LETTER_CHARS, MIN_LETTER_CHARS } from "./types";
 import { computeTakeHome } from "./statutory";
 import { readSalary } from "./salary";
 import { splitSentences } from "./text";
-import { CHECKS, detectClauses } from "./rules";
+import { CHECKS, detectClauses, sortClauses } from "./rules";
 import { writeQuestions } from "./questions";
+import { aiConfigured, readWithAi } from "./ai";
 
 export interface Reading {
   salary: Salary;
@@ -53,9 +54,22 @@ export function decodeWithRules(raw: string): DecodeResult {
   return buildResult(text, truncated, readWithRules(text), "rules");
 }
 
-/** The decode used by the API route. AI reading is added in a later slice. */
-export async function decode(raw: string): Promise<DecodeResult> {
-  return decodeWithRules(raw);
+/**
+ * The decode used by the API route: AI reading when a Gemini key is configured, built-in rules otherwise.
+ * Rules always run too, so a clause type the AI missed is still caught.
+ */
+export async function decode(raw: string, fetchImpl: typeof fetch = fetch): Promise<DecodeResult> {
+  const { text, truncated } = prepareText(raw);
+  const rules = readWithRules(text);
+  if (!aiConfigured()) return buildResult(text, truncated, rules, "rules");
+
+  const ai = await readWithAi(text, fetchImpl);
+  if (!ai) return buildResult(text, truncated, rules, "rules-fallback");
+
+  const salary = ai.salary.basic !== null ? { ...ai.salary, quoteStart: rules.salary.quoteStart, quoteEnd: rules.salary.quoteEnd } : rules.salary;
+  const aiTypes = new Set(ai.clauses.map((c) => c.type));
+  const clauses = sortClauses([...ai.clauses, ...rules.clauses.filter((c) => !aiTypes.has(c.type))]);
+  return buildResult(text, truncated, { salary, clauses }, "ai");
 }
 
 /** The first line that names a Malaysian company, e.g. "NUSANTARA ANALYTICS SDN BHD (1234567-X)". */

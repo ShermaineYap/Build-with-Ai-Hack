@@ -13,9 +13,9 @@ import { QuestionsPanel } from "@/components/QuestionsPanel";
 type Status = "idle" | "busy" | "done" | "error";
 
 const MODE_LABEL: Record<DecodeResult["mode"], string> = {
-  rules: "Built-in rules",
-  ai: "AI reading",
-  "rules-fallback": "Built-in rules (AI unavailable)",
+  rules: "built-in rules",
+  ai: "Gemini AI",
+  "rules-fallback": "built-in rules (AI unavailable)",
 };
 
 export default function Home() {

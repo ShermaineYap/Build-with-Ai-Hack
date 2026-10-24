@@ -39,11 +39,16 @@ export function detectClauses(text: string, salary: SalaryReading, sentences: Se
   const found = [bond, probation, notice, allowance, overtime, noncompete, transfer, hours, leave, deduction, deadline]
     .map((d) => d(ctx))
     .filter((c): c is Clause => c !== null);
-  const order: Record<Severity, number> = { red: 0, amber: 1, green: 2 };
-  // Within a severity, show what costs you most first.
-  const weight: ClauseType[] = ["bond", "notice", "probation", "overtime", "leave", "allowance", "deduction", "noncompete", "transfer", "hours", "deadline"];
-  return found.sort(
-    (a, b) => order[a.severity] - order[b.severity] || weight.indexOf(a.type) - weight.indexOf(b.type) || a.start - b.start,
+  return sortClauses(found);
+}
+
+const ORDER: Record<Severity, number> = { red: 0, amber: 1, green: 2 };
+// Within a severity, show what costs you most first.
+const WEIGHT: ClauseType[] = ["bond", "notice", "probation", "overtime", "leave", "allowance", "deduction", "noncompete", "transfer", "hours", "deadline"];
+
+export function sortClauses(cs: Clause[]): Clause[] {
+  return [...cs].sort(
+    (a, b) => ORDER[a.severity] - ORDER[b.severity] || WEIGHT.indexOf(a.type) - WEIGHT.indexOf(b.type) || a.start - b.start,
   );
 }
 

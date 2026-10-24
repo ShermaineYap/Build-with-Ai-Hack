@@ -39,7 +39,7 @@ Build mode: fast (Shermaine asked Claude to "do everything"; hands-on checkpoint
   Learner check: Tap Copy all and paste into a note; read it as if you were HR.
   Commit: `Generate questions to ask HR`
 
-- [ ] **4. Optional AI reading with safe fallback**
+- [x] **4. Optional AI reading with safe fallback**
   Becomes usable: With `GEMINI_API_KEY` set, letters are read by Gemini; without it, or on failure, built-in rules are used and the mode tag says which.
   Why now: Improves coverage for unusual letters without making the demo depend on a network call.
   PRD ref: `prd.md > Features and Behavior > Reading the letter`, `prd.md > States and Boundaries`

@@ -29,7 +29,7 @@ Build mode: fast (Shermaine asked Claude to "do everything"; hands-on checkpoint
   Learner check: Decode the sample and click each red card; confirm the right sentence lights up.
   Commit: `Flag risky clauses with quotes and highlights`
 
-- [ ] **3. Questions to ask HR, copied in one tap**
+- [x] **3. Questions to ask HR, copied in one tap**
   Becomes usable: 3–5 polite questions built from the flags with a Copy all button.
   Why now: Turns understanding into action; completes the core journey.
   PRD ref: `prd.md > Features and Behavior > Ask before you sign`

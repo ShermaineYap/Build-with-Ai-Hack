@@ -8,6 +8,7 @@ import { LetterPanel, type Mark } from "@/components/LetterPanel";
 import { TakeHomePanel } from "@/components/TakeHomePanel";
 import { EmptyState } from "@/components/EmptyState";
 import { ClausesPanel } from "@/components/ClausesPanel";
+import { QuestionsPanel } from "@/components/QuestionsPanel";
 
 type Status = "idle" | "busy" | "done" | "error";
 
@@ -122,6 +123,7 @@ export default function Home() {
           {result && (
             <ClausesPanel clauses={result.clauses} checked={result.checked} activeId={activeId} onSelect={setActiveId} />
           )}
+          {result && <QuestionsPanel questions={result.questions} employer={result.employer} />}
         </div>
       </main>
 

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { decodeWithRules } from "@/lib/decode";
 import { SAMPLE_LETTER } from "@/lib/sample-letter";
 import { splitSentences } from "@/lib/text";
+import { writeQuestions, emailText } from "@/lib/questions";
 
 const r = decodeWithRules(SAMPLE_LETTER);
 const byType = Object.fromEntries(r.clauses.map((c) => [c.type, c]));
@@ -90,4 +91,20 @@ Please confirm your acceptance within seven (7) days.`;
 it("treats random text as not a letter", () => {
   const x = decodeWithRules("The quick brown fox jumps over the lazy dog. ".repeat(10));
   expect(x.looksLikeLetter).toBe(false);
+});
+
+describe("questions for HR", () => {
+  const qs = writeQuestions(r.clauses);
+  it("asks 3–5 questions, led by the bond, notice and probation", () => {
+    expect(qs.length).toBeGreaterThanOrEqual(3);
+    expect(qs.length).toBeLessThanOrEqual(5);
+    expect(qs[0]).toContain("RM10,000 bond");
+    expect(qs[1]).toMatch(/3 months.*1 month/);
+    expect(qs[2]).toContain("90%");
+  });
+  it("makes a polite email", () => {
+    const e = emailText(qs, r.employer);
+    expect(e).toContain("Nusantara Analytics Sdn Bhd");
+    expect(e).toContain("1. ");
+  });
 });

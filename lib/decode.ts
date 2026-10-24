@@ -4,6 +4,7 @@ import { computeTakeHome } from "./statutory";
 import { readSalary } from "./salary";
 import { splitSentences } from "./text";
 import { CHECKS, detectClauses } from "./rules";
+import { writeQuestions } from "./questions";
 
 export interface Reading {
   salary: Salary;
@@ -39,7 +40,7 @@ export function buildResult(text: string, truncated: boolean, reading: Reading, 
     salary: reading.salary,
     takeHome,
     clauses: reading.clauses,
-    questions: [],
+    questions: writeQuestions(reading.clauses),
     looksLikeLetter,
     checked: CHECKED,
     employer: findEmployer(text),

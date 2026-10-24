@@ -72,12 +72,17 @@ Build mode: fast (Shermaine asked Claude to "do everything"; hands-on checkpoint
 
 - [ ] Learning activity complete — guided route, focused alternative, prior practice connected, or brief recap
 - [ ] Optional edit and transfer reflection addressed — offered/declined/already covered/not applicable as appropriate
-- [ ] `devpost/app-map.html` generated from finished code, checked, and shown, including a project-grounded practice to reuse
+- [x] `devpost/app-map.html` generated from finished code, checked, and shown, including a project-grounded practice to reuse
 
-Activity and evidence: not yet done
-Route and stops: not yet done
-Edit outcome: not yet done
-Reflection: not yet done
-Activity mode: not yet done
+Activity and evidence: not yet done — Shermaine delegated the build; the app map's reference route is ready for her to walk (about 3 minutes).
+Route and stops: reference route only — `app/page.tsx` `decode` → `lib/rules.ts` `detectClauses` → `lib/statutory.ts` `computeTakeHome`.
+Edit outcome: not applicable yet.
+Reflection: not offered yet.
+Activity mode: static reference (app map), not an interactive tour.
 
 ## Revisions
+
+- Interface font changed from Atkinson Hyperlegible to Schibsted Grotesk — Atkinson's slashed zero made ringgit amounts hard to read.
+- Background changed from warm paper (PRD Look and Feel) to a sage "office desk" with green-bar payslip paper — the warm-paper look is a common generic default; green-bar continuous-form paper is closer to a real Malaysian payslip.
+- Added a "time to reply" (deadline) detector and a probation take-home line — the sample letter's 3-day deadline and 90% probation pay were worth surfacing; both stay inside the one-screen journey.
+- Questions button labelled "Copy as email" instead of "Copy all" — it copies a short email, so the label says what happens.

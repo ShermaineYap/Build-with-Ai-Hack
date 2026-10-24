@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Baca Dulu app map</title>
+<style>
+  :root { --bg:#eef1ec; --card:#fff; --ink:#17201d; --ink2:#4e5a55; --rule:#c4ccc3; --chop:#2f3b8f; --red:#b3261e; --green:#2e7d4f; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#151a18; --card:#20272a; --ink:#eef2ee; --ink2:#b8c3bd; --rule:#39433f; --chop:#8f9bf0; --red:#ff8a80; --green:#7fd19b; } }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 860px; margin: 0 auto; padding: 32px 18px 48px; }
+  h1 { font-size: 2rem; margin: 0 0 4px; letter-spacing: -0.02em; }
+  h2 { font-size: 1.2rem; margin: 32px 0 8px; }
+  p, li { max-width: 72ch; }
+  .lead { color: var(--ink2); margin-top: 0; }
+  code { font: 0.9em ui-monospace, Menlo, Consolas, monospace; background: color-mix(in srgb, var(--rule) 35%, transparent); padding: 1px 5px; border-radius: 3px; }
+  .card { background: var(--card); border: 1px solid var(--rule); border-radius: 4px; padding: 16px 18px; margin: 12px 0; }
+  ol.route > li { margin-bottom: 14px; }
+  svg { width: 100%; height: auto; display: block; }
+  svg text { fill: var(--ink); font: 13px system-ui, sans-serif; }
+  svg .sub { fill: var(--ink2); font-size: 11.5px; }
+  svg rect { fill: var(--card); stroke: var(--rule); }
+  svg .key { stroke: var(--chop); stroke-width: 2; }
+  svg path.ln { stroke: var(--ink2); fill: none; stroke-width: 1.5; marker-end: url(#a); }
+  svg marker path { fill: var(--ink2); }
+  details summary { cursor: pointer; color: var(--chop); }
+  .meta { color: var(--ink2); font-size: 0.9rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Baca Dulu app map</h1>
+  <p class="lead">A take-home guide to how the proof of concept works and where to change things. It's a snapshot of the code at the commit noted at the bottom, so details can drift as the code changes.</p>
+
+  <h2>What it is</h2>
+  <p>One web page and one server function. You paste a Malaysian offer letter. The server finds the salary and risky clauses (with built-in rules, or Gemini if a key is set), works out take-home pay with fixed arithmetic, writes questions for HR, and sends everything back. The page draws the payslip, the flag cards and the questions, and highlights each quoted sentence in your letter.</p>
+
+  <h2>One action, end to end: Decode letter</h2>
+  <div class="card" role="img" aria-label="Diagram: Decode button sends the letter to the decode route, which runs the salary reader, clause rules and optional Gemini reader, then the calculator and question writer, and returns one result that the page renders as three panels.">
+    <svg viewBox="0 0 820 300" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+      <rect class="key" x="10" y="120" width="150" height="60" rx="4"/><text x="22" y="145">Decode letter</text><text class="sub" x="22" y="164">app/page.tsx · decode()</text>
+      <rect class="key" x="200" y="120" width="160" height="60" rx="4"/><text x="212" y="145">POST /api/decode</text><text class="sub" x="212" y="164">lib/decode.ts · decode()</text>
+      <rect x="400" y="20" width="190" height="52" rx="4"/><text x="412" y="42">Salary reader</text><text class="sub" x="412" y="60">lib/salary.ts · readSalary()</text>
+      <rect class="key" x="400" y="90" width="190" height="52" rx="4"/><text x="412" y="112">Clause rules</text><text class="sub" x="412" y="130">lib/rules.ts · detectClauses()</text>
+      <rect x="400" y="160" width="190" height="52" rx="4"/><text x="412" y="182">Gemini (optional)</text><text class="sub" x="412" y="200">lib/ai.ts · readWithAi()</text>
+      <rect x="400" y="230" width="190" height="52" rx="4"/><text x="412" y="252">Calculator + questions</text><text class="sub" x="412" y="270">statutory.ts · questions.ts</text>
+      <rect class="key" x="630" y="120" width="180" height="60" rx="4"/><text x="642" y="145">Three panels</text><text class="sub" x="642" y="164">components/*Panel.tsx</text>
+      <path class="ln" d="M160 150 H195"/>
+      <path class="ln" d="M360 140 C380 140 380 46 396 46"/><path class="ln" d="M360 146 C380 146 380 116 396 116"/><path class="ln" d="M360 156 C380 156 380 186 396 186"/><path class="ln" d="M360 162 C380 162 380 256 396 256"/>
+      <path class="ln" d="M590 150 H626"/>
+    </svg>
+  </div>
+
+  <h2>Reference route through the code</h2>
+  <p class="meta">This route wasn't walked through interactively; it's here for when you want to explore.</p>
+  <ol class="route">
+    <li><b>The button.</b> <code>app/page.tsx</code>, function <code>decode</code>. It checks the letter is at least 200 characters, POSTs it to <code>/api/decode</code>, and stores the <code>DecodeResult</code> in state. Everything on screen after that is drawn from that one object.</li>
+    <li><b>Reading the letter.</b> <code>lib/rules.ts</code>, function <code>detectClauses</code>. It runs one small detector per clause type (search for <code>function bond(</code>, <code>function notice(</code>…). Each one finds sentences with <code>splitSentences</code> from <code>lib/text.ts</code>, which keeps the exact character positions. That's why a card can highlight its sentence.</li>
+    <li><b>The money.</b> <code>lib/statutory.ts</code>, function <code>computeTakeHome</code>. Plain arithmetic for EPF, SOCSO, EIS and PCB. <code>tests/statutory.test.ts</code> checks it against hand-worked values for the sample letter (RM3,800 gross → RM3,415.94).</li>
+  </ol>
+
+  <h2>To change this, start here</h2>
+  <ul>
+    <li><b>Wording on a flag card</b> → the detector in <code>lib/rules.ts</code> (the last two strings passed to <code>clause(...)</code>).</li>
+    <li><b>A new kind of clause</b> → add a type in <code>lib/types.ts</code>, a detector in <code>lib/rules.ts</code>, a question in <code>lib/questions.ts</code>, and a test in <code>tests/rules.test.ts</code>.</li>
+    <li><b>Tax bands or contribution rates</b> → constants at the top of <code>lib/statutory.ts</code>; run <code>npm test</code> afterwards.</li>
+    <li><b>Colours, fonts, the payslip look</b> → CSS variables at the top of <code>app/globals.css</code>.</li>
+    <li><b>The demo letter</b> → <code>lib/sample-letter.ts</code>.</li>
+  </ul>
+
+  <h2>A practice to reuse</h2>
+  <div class="card">
+    <p><b>Write "done" as something you can check, then make a test say it.</b> The scope defined done as "the app catches the bond, probation, notice and allowance traps in the sample letter". <code>tests/rules.test.ts</code> turns each of those into an assertion, and the acceptance criterion "every quote is verbatim" became <code>expect(SAMPLE_LETTER.slice(c.start, c.end)).toBe(c.quote)</code>. The same check later protected the AI reader: <code>tests/ai.test.ts</code> proves an invented quote is dropped. On your next project, turn each line of your "what working looks like" section into a test before polishing the UI.</p>
+  </div>
+
+  <details>
+    <summary>Run it again</summary>
+    <p><code>npm install</code>, then <code>npm run dev</code>, then open <code>http://localhost:3000</code>. <code>npm test</code> runs the 42 tests. For Gemini, copy <code>.env.example</code> to <code>.env.local</code> and add a key.</p>
+  </details>
+
+  <p class="meta">Snapshot of commit <code>cfe595d</code> (slice 5). Offline page with no scripts.</p>
+</main>
+</body>
+</html>

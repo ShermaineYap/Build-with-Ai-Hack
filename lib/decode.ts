@@ -2,7 +2,7 @@ import type { Clause, DecodeResult, ReadMode, Salary } from "./types";
 import { MAX_LETTER_CHARS, MIN_LETTER_CHARS } from "./types";
 import { computeTakeHome } from "./statutory";
 import { readSalary } from "./salary";
-import { splitSentences } from "./text";
+import { findDurations, splitSentences, toMonths } from "./text";
 import { CHECKS, detectClauses, sortClauses } from "./rules";
 import { writeQuestions } from "./questions";
 import { aiConfigured, readWithAi } from "./ai";
@@ -45,6 +45,7 @@ export function buildResult(text: string, truncated: boolean, reading: Reading, 
     looksLikeLetter,
     checked: CHECKED,
     employer: findEmployer(text),
+    probation: probationPay(reading),
   };
 }
 
@@ -79,4 +80,17 @@ export function findEmployer(text: string): string | undefined {
     if (m) return m[1].replace(/\s+/g, " ").trim().toUpperCase();
   }
   return undefined;
+}
+
+/** If probation pays a reduced % of basic, what's the take-home in those months? */
+function probationPay(reading: Reading): DecodeResult["probation"] {
+  const c = reading.clauses.find((x) => x.type === "probation");
+  if (!c || reading.salary.basic === null) return undefined;
+  const pct = c.quote.match(/(\d{2,3})\s?%/);
+  if (!pct || Number(pct[1]) >= 100) return undefined;
+  const percent = Number(pct[1]);
+  const d = findDurations(c.quote).find((x) => x.unit === "month" || x.unit === "week");
+  const th = computeTakeHome({ ...reading.salary, basic: (reading.salary.basic * percent) / 100 });
+  if (!th) return undefined;
+  return { percent, months: d ? Math.round(toMonths(d)) : null, net: th.net };
 }

@@ -127,7 +127,11 @@ a { color: var(--chop); }
   position: sticky;
   top: 16px;
 }
-@media (max-width: 900px) { .sheet { position: static; } }
+@media (max-width: 900px) {
+  .sheet { position: static; }
+  .has-result .letter-view { height: 42vh; min-height: 240px; }
+}
+.probation-line { border-left: 3px solid var(--red); padding-left: 10px; margin-bottom: 8px; }
 .sheet-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 12px; }
 .sheet-head h2 { margin: 0; font-size: 1.05rem; }
 .link-btn {

@@ -8,9 +8,10 @@ interface Props {
   salary: Salary;
   takeHome: TakeHome | null;
   employer?: string;
+  probation?: { percent: number; months: number | null; net: number };
 }
 
-export function TakeHomePanel({ salary, takeHome, employer }: Props) {
+export function TakeHomePanel({ salary, takeHome, employer, probation }: Props) {
   const [manualBasic, setManualBasic] = useState("");
   const manual = Number(manualBasic.replace(/[^\d.]/g, ""));
   const th =
@@ -69,6 +70,12 @@ export function TakeHomePanel({ salary, takeHome, employer }: Props) {
 
       {th && (
         <>
+          {probation && takeHome && (
+            <p className="payslip-foot probation-line">
+              During {probation.months ? `your ${probation.months}-month` : "your"} probation at {probation.percent}% pay, it&apos;s about{" "}
+              <strong>RM{fmt(probation.net)} a month</strong>, RM{fmt(takeHome.net - probation.net)} less.
+            </p>
+          )}
           <p className="payslip-foot">
             Income tax is about <strong>RM{fmt(th.pcb)} a month</strong>
             {th.pcb < 50 ? " — far less than most people expect at this salary." : "."}

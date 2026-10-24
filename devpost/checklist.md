@@ -49,7 +49,7 @@ Build mode: fast (Shermaine asked Claude to "do everything"; hands-on checkpoint
   Learner check: (Optional) add your key to `.env.local`, decode the sample, and see the tag say "AI reading".
   Commit: `Add optional Gemini reader with fallback`
 
-- [ ] **5. Finished feel: states, mobile, dark mode**
+- [x] **5. Finished feel: states, mobile, dark mode**
   Becomes usable: Empty state, "not a letter" message, manual basic-salary entry, nothing-alarming card, truncation notice, stacked phone layout, dark mode, footer disclaimer.
   Why now: Design is the first tie-breaker; this is what makes it a product rather than a demo.
   PRD ref: `prd.md > States and Boundaries`, `prd.md > Look and Feel`, `prd.md > Screens and Layout`

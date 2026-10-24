@@ -92,7 +92,7 @@ export default function Home() {
         )}
       </header>
 
-      <main className="desk">
+      <main className={`desk${result ? " has-result" : ""}`}>
         <LetterPanel
           text={text}
           onChange={setText}
@@ -117,7 +117,7 @@ export default function Home() {
           {!result && status !== "error" && <EmptyState onSample={loadSample} />}
           {result && (
             <div className="printing" key={result.text.length + result.mode}>
-              <TakeHomePanel salary={result.salary} takeHome={result.takeHome} employer={result.employer} />
+              <TakeHomePanel salary={result.salary} takeHome={result.takeHome} employer={result.employer} probation={result.probation} />
             </div>
           )}
           {result && (

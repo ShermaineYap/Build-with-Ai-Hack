@@ -78,6 +78,8 @@ export interface DecodeResult {
   questions: string[];
   looksLikeLetter: boolean;
   checked: string[];
+  /** Take-home during a reduced-pay probation, if the letter has one. */
+  probation?: { percent: number; months: number | null; net: number };
   /** Company name found in the letterhead, if any. */
   employer?: string;
 }

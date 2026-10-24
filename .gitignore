@@ -16,3 +16,7 @@ next-env.d.ts
 .vercel/
 .DS_Store
 npm-debug.log*
+
+# Demo video lives on YouTube, not in the repo
+*.mp4
+*.webm

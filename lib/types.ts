@@ -10,7 +10,8 @@ export type ClauseType =
   | "overtime"
   | "hours"
   | "leave"
-  | "deduction";
+  | "deduction"
+  | "deadline";
 
 export interface Allowance {
   label: string;

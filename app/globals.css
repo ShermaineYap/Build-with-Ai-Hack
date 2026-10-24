@@ -23,7 +23,7 @@
   --mark: #fff0a8;          /* highlighter */
   --mark-active: #ffd84d;
   --shadow: 0 1px 0 rgba(23, 32, 29, 0.06), 0 10px 30px -12px rgba(23, 32, 29, 0.28);
-  --sans: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  --sans: "Schibsted Grotesk", "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
   --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
   --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   color-scheme: light;
@@ -84,8 +84,8 @@ a { color: var(--chop); }
   margin: 0;
   font-size: clamp(2.6rem, 6vw, 4.2rem);
   line-height: 0.95;
-  font-weight: 700;
-  letter-spacing: -0.035em;
+  font-weight: 900;
+  letter-spacing: -0.04em;
 }
 .wordmark .dot { color: var(--red); }
 .tagline { margin: 10px 0 0; font-size: 1.15rem; color: var(--ink); max-width: 34ch; }
@@ -285,7 +285,7 @@ a { color: var(--chop); }
   font-size: 0.92rem;
 }
 .flag p { margin: 0; font-size: 0.95rem; }
-.flag .normal { color: var(--ink-2); font-size: 0.9rem; margin-top: 4px; }
+.flag .normal { display: block; color: var(--ink-2); font-size: 0.9rem; margin-top: 6px; }
 .flag .normal b { color: var(--ink); font-weight: 700; }
 @media (max-width: 520px) {
   .flag { grid-template-columns: 1fr; }

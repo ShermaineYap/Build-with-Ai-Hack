@@ -19,7 +19,7 @@ Build mode: fast (Shermaine asked Claude to "do everything"; hands-on checkpoint
   Learner check: Open the app, tap Try a sample letter → Decode, and check the receipt matches what you'd expect from a RM3,800 offer.
   Commit: `Decode take-home pay from a pasted offer letter`
 
-- [ ] **2. Risky clauses appear as cards quoting your letter**
+- [x] **2. Risky clauses appear as cards quoting your letter**
   Becomes usable: Red/amber/green cards for bond, probation, notice, allowance structure and the other detectors, each quoting the sentence; clicking a card highlights it in the letter.
   Why now: This is the kernel — reading *this* letter and pointing at the sentence.
   PRD ref: `prd.md > Features and Behavior > Clauses that bite`

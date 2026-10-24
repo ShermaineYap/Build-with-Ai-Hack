@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import "@fontsource/atkinson-hyperlegible/400.css";
-import "@fontsource/atkinson-hyperlegible/700.css";
-import "@fontsource/atkinson-hyperlegible/400-italic.css";
+import "@fontsource/schibsted-grotesk/400.css";
+import "@fontsource/schibsted-grotesk/400-italic.css";
+import "@fontsource/schibsted-grotesk/700.css";
+import "@fontsource/schibsted-grotesk/900.css";
 import "@fontsource/source-serif-4/400.css";
 import "@fontsource/source-serif-4/600.css";
 import "@fontsource/ibm-plex-mono/400.css";

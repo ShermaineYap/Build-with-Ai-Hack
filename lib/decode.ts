@@ -3,20 +3,21 @@ import { MAX_LETTER_CHARS, MIN_LETTER_CHARS } from "./types";
 import { computeTakeHome } from "./statutory";
 import { readSalary } from "./salary";
 import { splitSentences } from "./text";
+import { CHECKS, detectClauses } from "./rules";
 
 export interface Reading {
   salary: Salary;
   clauses: Clause[];
 }
 
-export const CHECKED = ["Basic salary and allowances"];
+export const CHECKED = ["Basic salary and allowances", ...CHECKS.map((c) => c.label)];
 
 export function readWithRules(text: string): Reading {
   const sentences = splitSentences(text);
   const salary = readSalary(text, sentences);
   return {
     salary: { basic: salary.basic, allowances: salary.allowances, period: salary.period, quoteStart: salary.quoteStart, quoteEnd: salary.quoteEnd },
-    clauses: [],
+    clauses: detectClauses(text, salary, sentences),
   };
 }
 

@@ -7,6 +7,7 @@ import { SAMPLE_LETTER } from "@/lib/sample-letter";
 import { LetterPanel, type Mark } from "@/components/LetterPanel";
 import { TakeHomePanel } from "@/components/TakeHomePanel";
 import { EmptyState } from "@/components/EmptyState";
+import { ClausesPanel } from "@/components/ClausesPanel";
 
 type Status = "idle" | "busy" | "done" | "error";
 
@@ -117,6 +118,9 @@ export default function Home() {
             <div className="printing" key={result.text.length + result.mode}>
               <TakeHomePanel salary={result.salary} takeHome={result.takeHome} employer={result.employer} />
             </div>
+          )}
+          {result && (
+            <ClausesPanel clauses={result.clauses} checked={result.checked} activeId={activeId} onSelect={setActiveId} />
           )}
         </div>
       </main>
